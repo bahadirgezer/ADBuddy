@@ -1,4 +1,5 @@
 import time
+from multiprocessing import Pool
 
 from selenium import webdriver
 from selenium.common import TimeoutException
@@ -10,12 +11,11 @@ from webdriver_manager.chrome import ChromeDriverManager
 import config
 
 
-def login():
+def login(driver):
     """
     Login to  https://adbs.uab.gov.tr/login, which uses turkiye.gov.tr
     :return:
     """
-    global service, driver
     driver.get("https://giris.turkiye.gov.tr/OAuth2AuthorizationServer/AuthorizationController?response_type=code"
                "&client_id=757dc02b-382a-4128-8e24-d3aff1f7a239&state=random_value&scope=Kimlik-Dogrula&redirect_uri"
                "=https://adbs.uab.gov.tr/giris")
@@ -30,27 +30,27 @@ def login():
         print("Please check your credentials in the src/config.py file")
 
 
-def adb():
+def adb(driver):
     """
     Function to complete the ADB (Amatör Denizci Belgesi) course.
     :return:
     """
     driver.get("https://adbs.uab.gov.tr/users/my-educations/1")
-    do_course()
+    do_course(driver)
     print("Amatör Denizci Belgesi course completed")
 
 
-def kmt():
+def kmt(driver):
     """
     Function to complete the KMT (Kısa Mesafe Telsiz Operatörü) course.
     :return:
     """
     driver.get("https://adbs.uab.gov.tr/users/my-educations/2")
-    do_course()
+    do_course(driver)
     print("Kısa Mesafe Telsiz Operatörü course completed")
 
 
-def do_course():
+def do_course(driver):
     start_button = WebDriverWait(driver, 10) \
         .until(EC.element_to_be_clickable((By.CLASS_NAME, 'dx-button-mode-contained.dx-button-success')))
     driver.execute_script("arguments[0].click();", start_button)
@@ -85,22 +85,40 @@ def do_course():
                 print("finish button not found")
 
 
+def get_adb():
+    """
+    Function to complete the ADB (Amatör Denizci Belgesi) course. In a thread
+    """
+    driver = webdriver.Chrome(service=service)
+    adb(driver)
+    do_course(driver)
+    input("Press any key to exit the ADB course")
+    driver.quit()
+
+
+def get_kmt():
+    """
+    Function to complete the KMT (Kısa Mesafe Telsiz Operatörü) course. In a thread
+    """
+    driver = webdriver.Chrome(service=service)
+    login(driver)
+    kmt(driver)
+    input("Press any key to exit the KMT course")
+    driver.quit()
+
+
 if __name__ == '__main__':
     service = ChromeService(executable_path=ChromeDriverManager().install())
-    driver = webdriver.Chrome(service=service)
 
     while True:
         lecture = input("Which lecture do you want to complete? (adb/kmt): ").lower()
         if lecture == "adb":
-            login()
-            adb()
+            get_adb()
             break
         elif lecture == "kmt":
-            login()
-            kmt()
+            get_kmt()
             break
         else:
             print("Please enter a valid lecture name.")
 
     input()
-    driver.quit()
