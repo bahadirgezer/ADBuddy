@@ -37,6 +37,7 @@ def adb():
     """
     driver.get("https://adbs.uab.gov.tr/users/my-educations/1")
     do_course()
+    print("Amatör Denizci Belgesi course completed")
 
 
 def kmt():
@@ -46,6 +47,7 @@ def kmt():
     """
     driver.get("https://adbs.uab.gov.tr/users/my-educations/2")
     do_course()
+    print("Kısa Mesafe Telsiz Operatörü course completed")
 
 
 def do_course():
