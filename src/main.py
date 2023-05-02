@@ -90,8 +90,8 @@ def get_adb():
     Function to complete the ADB (Amatör Denizci Belgesi) course. In a thread
     """
     driver = webdriver.Chrome(service=service)
+    login(driver)
     adb(driver)
-    do_course(driver)
     input("Press any key to exit the ADB course")
     driver.quit()
 
@@ -121,4 +121,4 @@ if __name__ == '__main__':
         else:
             print("Please enter a valid lecture name.")
 
-    input()
+ # TODO: index.html, create a javascript file to run the python script, manifest.json, icon.png, background.js
