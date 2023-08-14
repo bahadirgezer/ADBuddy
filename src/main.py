@@ -1,5 +1,4 @@
 import time
-from multiprocessing import Pool
 
 from selenium import webdriver
 from selenium.common import TimeoutException
@@ -120,5 +119,3 @@ if __name__ == '__main__':
             break
         else:
             print("Please enter a valid lecture name.")
-
- # TODO: index.html, create a javascript file to run the python script, manifest.json, icon.png, background.js
